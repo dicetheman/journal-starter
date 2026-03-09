@@ -50,28 +50,7 @@ async def get_entry(entry_id: str, entry_service: EntryService = Depends(get_ent
         raise HTTPException(status_code=404, detail="This entry does not exist")
     else:
         return result
-        
-    """
-    TODO: Implement this endpoint to return a single journal entry by ID
 
-    Steps to implement:
-    1. Use entry_service.get_entry(entry_id) to fetch the entry
-    2. If entry is None, raise HTTPException with status_code=404
-    3. Return the entry directly (not wrapped in a dict)
-
-    Example response (status 200):
-    {
-        "id": "uuid-string",
-        "work": "...",
-        "struggle": "...",
-        "intention": "...",
-        "created_at": "...",
-        "updated_at": "..."
-    }
-
-    Hint: Check the update_entry endpoint for similar patterns
-    """
-    #raise HTTPException(status_code=501, detail="Not implemented - complete this endpoint!")
 
 @router.patch("/entries/{entry_id}")
 async def update_entry(entry_id: str, entry_update: dict, entry_service: EntryService = Depends(get_entry_service)):
