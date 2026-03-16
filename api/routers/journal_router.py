@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from api.models.entry import Entry, EntryCreate
 from api.repositories.postgres_repository import PostgresDB
 from api.services.entry_service import EntryService
+from api.services.llm_service import analyze_journal_entry
 
 router = APIRouter()
 
@@ -112,4 +113,17 @@ async def analyze_entry(entry_id: str, entry_service: EntryService = Depends(get
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
     """
-    raise HTTPException(status_code=501, detail="Implement this endpoint - see Learn to Cloud curriculum")
+    entry = await entry_service.get_entry(entry_id)
+    if not entry:
+
+        raise HTTPException(status_code=404, detail="Entry not found")
+    entry_text = f"Work:{entry['work']}, Struggle:{entry['struggle']}, Intention:{entry['intention']}"
+    try:
+        result = await analyze_journal_entry(entry_id, entry_text)
+    except NotImplementedError:
+        raise HTTPException(status_code=501, detail="LLM analysis not yet implemented")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}") 
+    return result
+
+    #raise HTTPException(status_code=501, detail="Implement this endpoint - see Learn to Cloud curriculum")
