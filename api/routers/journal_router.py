@@ -65,7 +65,7 @@ async def update_entry(entry_id: str, entry_update: dict, entry_service: EntrySe
 
 # TODO: Implement DELETE /entries/{entry_id} endpoint to remove a specific entry
 # Return 404 if entry not found
-@router.delete("/entries/{entry_id}", status_code=204)
+@router.delete("/entries/{entry_id}", status_code=200)
 async def delete_entry(entry_id: str, entry_service: EntryService = Depends(get_entry_service)):
     result = await entry_service.get_entry(entry_id)
     if result == None:
