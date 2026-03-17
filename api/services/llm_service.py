@@ -1,14 +1,9 @@
 
-# TODO: Import your chosen LLM SDK
-# from openai import OpenAI
-# import anthropic
-# import boto3
-# from google.cloud import aiplatform
-
 import os
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
 import json
+
 
 load_dotenv(override=True)
 API_HOST = os.getenv("API_HOST", "github")
@@ -16,27 +11,7 @@ client = AsyncOpenAI(base_url="https://models.github.ai/inference", api_key=os.e
 MODEL_NAME = os.getenv("GITHUB_MODEL", "openai/gpt-4o")
 
 async def analyze_journal_entry(entry_id: str, entry_text: str) -> dict:
-    """
-    Analyze a journal entry using your chosen LLM API.
 
-    Args:
-        entry_id: The ID of the journal entry being analyzed
-        entry_text: The combined text of the journal entry (work + struggle + intention)
-
-    Returns:
-        dict with keys:
-            - entry_id: ID of the analyzed entry
-            - sentiment: "positive" | "negative" | "neutral"
-            - summary: 2 sentence summary of the entry
-            - topics: list of 2-4 key topics mentioned
-            - created_at: timestamp when the analysis was created
-
-    TODO: Implement this function using your chosen LLM provider.
-    See the Learn to Cloud curriculum for guidance on:
-    - Setting up your LLM API client
-    - Crafting effective prompts
-    - Handling structured JSON output
-    """
     response = await client.chat.completions.create(
     model=MODEL_NAME,
     temperature=0.7,
@@ -49,13 +24,9 @@ async def analyze_journal_entry(entry_id: str, entry_text: str) -> dict:
 
     #print(f"Response from {API_HOST}: \n")
     result = response.choices[0].message.content
-
+    
     if not result:
-
-        raise NotImplementedError(
-        "Implement this function using your chosen LLM API. "
-        "See the Learn to Cloud curriculum for guidance."
-        )
+        raise ValueError('Result is None')
     else:
         return json.loads(result)
 
